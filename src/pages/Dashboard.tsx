@@ -5,7 +5,8 @@ import { StatCard } from "@/components/dashboard/StatCard";
 import { TaskProgress } from "@/components/dashboard/TaskProgress";
 import { PriorityChart } from "@/components/dashboard/PriorityChart";
 import { TaskList } from "@/components/tasks/TaskList";
-import { getTaskStats, getUpcomingTasks } from "@/services/mockData";
+import { getTaskStats, getUpcomingTasks, mockTasks } from "@/services/mockData";
+import { Priority } from "@/types";
 
 export default function Dashboard() {
   const stats = getTaskStats();
@@ -53,8 +54,8 @@ export default function Dashboard() {
           <div className="lg:col-span-2">
             <PriorityChart 
               high={stats.highPriority}
-              medium={mockTasks.filter(task => task.priority === "MEDIUM").length}
-              low={mockTasks.filter(task => task.priority === "LOW").length}
+              medium={mockTasks.filter(task => task.priority === Priority.MEDIUM).length}
+              low={mockTasks.filter(task => task.priority === Priority.LOW).length}
             />
           </div>
         </div>
