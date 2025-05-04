@@ -14,6 +14,7 @@ import TaskDetails from "./pages/TaskDetails";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/login" element={currentUser ? <Navigate to="/dashboard" /> : <Login />} />
+      <Route path="/register" element={currentUser ? <Navigate to="/dashboard" /> : <Register />} />
       <Route path="/" element={<Index />} />
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
       <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />

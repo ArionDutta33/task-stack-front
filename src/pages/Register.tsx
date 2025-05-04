@@ -7,35 +7,48 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { CheckCircle, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { CheckCircle, User, Mail, Lock, Eye, EyeOff } from "lucide-react";
 
-export default function Login() {
+export default function Register() {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { login } = useAuth();
+  const { register } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (password !== confirmPassword) {
+      toast({
+        title: "Error",
+        description: "Passwords do not match",
+        variant: "destructive",
+        duration: 3000,
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      const success = await login(email, password);
+      const success = await register(username, email, password);
       
       if (success) {
         toast({
-          title: "Login successful",
-          description: "Welcome back!",
+          title: "Registration successful",
+          description: "Your account has been created!",
           duration: 3000,
         });
-        navigate("/dashboard");
+        navigate("/login");
       } else {
         toast({
-          title: "Login failed",
-          description: "Invalid email or password",
+          title: "Registration failed",
+          description: "Email may already be in use",
           variant: "destructive",
           duration: 3000,
         });
@@ -65,11 +78,26 @@ export default function Login() {
           </div>
           <CardTitle className="text-2xl font-bold">TaskStack</CardTitle>
           <CardDescription>
-            Enter your credentials to access your account
+            Create an account to get started
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="username">Username</Label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="John Doe"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="pl-10"
+                  required
+                />
+              </div>
+            </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
@@ -86,12 +114,7 @@ export default function Login() {
               </div>
             </div>
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                <a href="#" className="text-sm text-primary hover:underline">
-                  Forgot password?
-                </a>
-              </div>
+              <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
                 <Input
@@ -115,42 +138,46 @@ export default function Login() {
                 </button>
               </div>
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Input
+                  id="confirmPassword"
+                  type={showPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="pl-10 pr-10"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+            </div>
             
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Signing in..." : "Sign In"}
+              {isLoading ? "Creating account..." : "Create account"}
             </Button>
-
-            <div className="text-center text-sm">
-              Don't have an account?{" "}
-              <Link to="/register" className="text-primary hover:underline">
-                Create account
-              </Link>
-            </div>
           </form>
         </CardContent>
-        <CardFooter className="text-center text-sm text-muted-foreground">
-          <div className="w-full">
-            Demo accounts for testing:
-            <div className="flex justify-center gap-4 mt-2">
-              <Button variant="outline" size="sm" onClick={() => {
-                setEmail("john@example.com");
-                setPassword("password");
-              }}>
-                Admin
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => {
-                setEmail("jane@example.com");
-                setPassword("password");
-              }}>
-                Manager
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => {
-                setEmail("mike@example.com");
-                setPassword("password");
-              }}>
-                User
-              </Button>
-            </div>
+        <CardFooter className="flex flex-col gap-2 text-center text-sm text-muted-foreground">
+          <div>
+            Already have an account?{" "}
+            <Link to="/login" className="text-primary hover:underline">
+              Sign in
+            </Link>
+          </div>
+          <div className="text-xs">
+            By registering, you agree to our terms and conditions.
           </div>
         </CardFooter>
       </Card>
