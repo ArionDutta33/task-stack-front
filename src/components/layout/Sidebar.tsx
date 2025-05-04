@@ -2,11 +2,9 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
-  Calendar, 
   CheckCircle, 
   Home, 
   ListTodo, 
-  Settings, 
   User
 } from "lucide-react";
 
@@ -22,11 +20,6 @@ const NAV_ITEMS = [
     icon: ListTodo,
   },
   {
-    name: "Calendar",
-    href: "/calendar",
-    icon: Calendar,
-  },
-  {
     name: "Completed",
     href: "/completed",
     icon: CheckCircle,
@@ -35,11 +28,6 @@ const NAV_ITEMS = [
     name: "Profile",
     href: "/profile",
     icon: User,
-  },
-  {
-    name: "Settings",
-    href: "/settings",
-    icon: Settings,
   },
 ];
 

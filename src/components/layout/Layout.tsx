@@ -2,6 +2,7 @@
 import { ReactNode } from "react";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface LayoutProps {
   children: ReactNode;
@@ -10,6 +11,12 @@ interface LayoutProps {
 }
 
 export function Layout({ children, title, subtitle }: LayoutProps) {
+  const { currentUser } = useAuth();
+  
+  if (!currentUser) {
+    return null; // Should never happen because of ProtectedRoute, but just in case
+  }
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />

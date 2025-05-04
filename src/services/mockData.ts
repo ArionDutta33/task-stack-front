@@ -7,6 +7,7 @@ export const mockUsers: User[] = [
     _id: "1",
     username: "John Doe",
     email: "john@example.com",
+    password: "password", // In a real app, this would be hashed
     bio: "Project Manager",
     dateJoined: "2023-01-15",
     role: Roles.ADMIN
@@ -15,6 +16,7 @@ export const mockUsers: User[] = [
     _id: "2",
     username: "Jane Smith",
     email: "jane@example.com",
+    password: "password", // In a real app, this would be hashed
     bio: "Senior Developer",
     dateJoined: "2023-02-10",
     role: Roles.MANAGER
@@ -23,11 +25,17 @@ export const mockUsers: User[] = [
     _id: "3",
     username: "Mike Johnson",
     email: "mike@example.com",
+    password: "password", // In a real app, this would be hashed
     bio: "UI/UX Designer",
     dateJoined: "2023-03-05",
     role: Roles.USER
   }
 ];
+
+// Helper function to get assignable users (not managers)
+export const getAssignableUsers = () => {
+  return mockUsers.filter(user => user.role !== Roles.MANAGER);
+};
 
 // Mock Tasks
 export const mockTasks: Task[] = [
@@ -188,4 +196,22 @@ export const getRecentTasks = () => {
   return [...mockTasks]
     .sort((a, b) => new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime())
     .slice(0, 5);
+};
+
+// Helper function to get tasks by user role
+export const getTasksByUserRole = (userId: string) => {
+  const user = mockUsers.find(user => user._id === userId);
+  
+  if (!user) return [];
+  
+  if (user.role === Roles.ADMIN) {
+    // Admin sees all tasks
+    return mockTasks;
+  } else if (user.role === Roles.MANAGER) {
+    // Managers see tasks they created
+    return mockTasks.filter(task => task.assignedBy._id === userId);
+  } else {
+    // Regular users see tasks assigned to them
+    return mockTasks.filter(task => task.assignedTo._id === userId);
+  }
 };
